@@ -8,6 +8,8 @@ import random
 import webapp2
 import time
 
+newBoardStock=[]
+
 # Reads json description of the board and provides simple interface.
 class Game:
 	# Takes json or a board directly.
@@ -39,7 +41,8 @@ class Game:
                                 move = {"Where": [x,y],
                                         "As": self.Next()}
                                 if self.NextBoardPosition(move):
-                                        moves.append(move)
+                                    	moves.append(move)
+	
                 return moves
 
 	# Helper function of NextBoardPosition.  It looks towards
@@ -66,6 +69,7 @@ class Game:
 				flip_x = flip_move[0]
 				flip_y = flip_move[1]
 				SetPos(new_board, flip_x, flip_y, player)
+				newBoardStock.append(new_board)
                         return True
                 return False
 
@@ -95,6 +99,7 @@ class Game:
                 new_board["Next"] = 3 - self.Next()
 		return Game(board=new_board)
 
+
 # Returns piece on the board.
 # 0 for no pieces, 1 for player 1, 2 for player 2.
 # None for coordinate out of scope.
@@ -113,7 +118,7 @@ def SetPos(board, x, y, piece):
 	if isinstance(board,dict):
 		board=board["Pieces"]
 	board[y-1][x-1] = piece
-	logging.info('SetPos(board, %d, %d, %d) board contents: %s' % (x,y,piece,board))
+	#logging.info('SetPos(board, %d, %d, %d) board contents: %s' % (x,y,piece,board))
 
 # Debug function to pretty print the array representation of board.
 def PrettyPrint(board, nl="<br>"):
@@ -143,48 +148,42 @@ def calculate(board):
 	for indexForX in [1,8]:
 		for indexForY in range(2,8):
 			if board[indexForX-1][indexForY-1]==1:
-					pointOfBlack+=3
+					pointOfBlack+=2
 			elif board[indexForX-1][indexForY-1]==2:
-					pointOfWhite-=3
+					pointOfWhite-=2
 		
 	for indexForY in [1,8]:
 		for indexForX in range(2,8):
 			if board[indexForX-1][indexForY-1]==1:
-					pointOfBlack+=3
+					pointOfBlack+=2
 			elif board[indexForX-1][indexForY-1]==2:
-					pointOfWhite-=3
+					pointOfWhite-=2
 		
 	for indexForX in [1,8]:
 		for indexForY in [1,8]:
 			if board[indexForX-1][indexForY-1]==1:
-					pointOfBlack+=6
+					pointOfBlack+=5
 			elif board[indexForX-1][indexForY-1]==2:
-					pointOfWhite-=6
+					pointOfWhite-=5
 	return boardPoint
 
 def minMax(g,board,player,valid_moves):
 	boardAndPointDict={}
 	listForPoint=[]
 	depth=1
+	count=0
 	for move in valid_moves:
 		#for making newBoard from (every) move
-		xAndY=move.get("Where")
-		nextX=xAndY[0]
-		nextY=xAndY[1]
-		#----------------------code(I can't understand)--------------
-		SetPos(board,nextX,nextY,player)
-		#Game.NextBoardPosition(g,move)
-		print(board)
-		
-		#----------------------code(I can't understand)--------------
-		
+		board=newBoardStock[count]
 		boardPoint=calculate(board)
 		print(boardPoint)
 		boardAndPointDict[boardPoint]=move
-	if piece==1:
-		return boardAndPointDict[max(boardPoint)]
-	elif piece==2:
-		return boardAndPointDict[min(boardPoint)]
+		listForPoint.append(boardPoint)
+		count+=1
+	if valid_moves[0]["As"]==1:
+		return boardAndPointDict[max(listForPoint)]
+	elif valid_moves[0]["As"]==2:
+		return boardAndPointDict[min(listForPoint)]
 #-----------------------written by Mamiko Ino--------------------------
 
 
