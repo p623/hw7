@@ -110,7 +110,10 @@ def Pos(board, x, y):
 def SetPos(board, x, y, piece):
 	if x < 1 or 8 < x or y < 1 or 8 < y or piece not in [0,1,2]:
 		return False
+	if isinstance(board,dict):
+		board=board["Pieces"]
 	board[y-1][x-1] = piece
+	logging.info('SetPos(board, %d, %d, %d) board contents: %s' % (x,y,piece,board))
 
 # Debug function to pretty print the array representation of board.
 def PrettyPrint(board, nl="<br>"):
@@ -125,7 +128,7 @@ def PrettyMove(move):
 	m = move["Where"]
 	return '%s%d' % (chr(ord('A') + m[0] - 1), m[1])
 
-#------------------written by Mamiko Ino-----------------------
+#------------------written by Mamiko Ino----------------------------
 def calculate(board):
 	pointOfBlack=0
 	pointOfWhite=0
@@ -159,24 +162,30 @@ def calculate(board):
 					pointOfWhite-=6
 	return boardPoint
 
-		
-
-def minMax(board,player,valid_moves):
+def minMax(g,board,player,valid_moves):
 	boardAndPointDict={}
 	listForPoint=[]
 	depth=1
 	for move in valid_moves:
+		#for making newBoard from (every) move
 		xAndY=move.get("Where")
 		nextX=xAndY[0]
 		nextY=xAndY[1]
+		#----------------------code(I can't understand)--------------
 		SetPos(board,nextX,nextY,player)
+		#Game.NextBoardPosition(g,move)
+		print(board)
+		
+		#----------------------code(I can't understand)--------------
+		
 		boardPoint=calculate(board)
+		print(boardPoint)
 		boardAndPointDict[boardPoint]=move
 	if piece==1:
 		return boardAndPointDict[max(boardPoint)]
 	elif piece==2:
 		return boardAndPointDict[min(boardPoint)]
-#-----------------------written by Mamiko Ino--------------
+#-----------------------written by Mamiko Ino--------------------------
 
 
 class MainHandler(webapp2.RequestHandler):
@@ -217,7 +226,8 @@ Paste JSON here:<p/><textarea name=json cols=80 rows=24></textarea>
                 # TO STEP STUDENTS:
                 # You'll probably want to change how this works, to do something
                 # more clever than just picking a random move.
-	    	move = minMax(g._board,g.Next(),valid_moves)
+			
+	    	move = minMax(g,g._board,g.Next(),valid_moves)
     		self.response.write(PrettyMove(move))
 	
 	
