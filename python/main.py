@@ -137,10 +137,13 @@ def PrettyMove(move):
 def calculate(board):
 	pointOfBlack=0
 	pointOfWhite=0
-	boardPoint=pointOfBlack+pointOfWhite
 	for indexForX in range(2,8):
 		for indexForY in range(2,8):
-			if board[indexForX-1][indexForY-1]==1:
+			if indexForX==2 or 7 and indexForY==2 or 7 and board[indexForX-1][indexForY-1]==1:
+				pointOfBlack-=4
+			elif indexForX==2 or 7 and indexForY==2 or 7 and board[indexForX-1][indexForY-1]==2:	
+				pointOfWhite+=4
+			elif board[indexForX-1][indexForY-1]==1:
 				pointOfBlack+=1
 			elif board[indexForX-1][indexForY-1]==2:
 				pointOfWhite-=1
@@ -148,42 +151,74 @@ def calculate(board):
 	for indexForX in [1,8]:
 		for indexForY in range(2,8):
 			if board[indexForX-1][indexForY-1]==1:
-					pointOfBlack+=2
+					pointOfBlack+=3
 			elif board[indexForX-1][indexForY-1]==2:
-					pointOfWhite-=2
+					pointOfWhite-=3
 		
 	for indexForY in [1,8]:
 		for indexForX in range(2,8):
 			if board[indexForX-1][indexForY-1]==1:
-					pointOfBlack+=2
+					pointOfBlack+=3
 			elif board[indexForX-1][indexForY-1]==2:
-					pointOfWhite-=2
+					pointOfWhite-=3
 		
 	for indexForX in [1,8]:
 		for indexForY in [1,8]:
 			if board[indexForX-1][indexForY-1]==1:
-					pointOfBlack+=5
+					pointOfBlack+=7
 			elif board[indexForX-1][indexForY-1]==2:
-					pointOfWhite-=5
+					pointOfWhite-=7
+
+	boardPoint=pointOfBlack+pointOfWhite
 	return boardPoint
 
-def minMax(g,board,player,valid_moves):
-	boardAndPointDict={}
-	listForPoint=[]
-	depth=1
+def score(newBoards):
+	pointListForReturn=[]
+	for board in newBoards:
+		pointListForReturn.append(calculate(board))
+	return pointListForReturn
+
+
+def minMax(g,player):
+	depth=2
+	moveAndPoint={}
+	moveStock=[]
+	pointStock=[]
+	boardStockStock=[[]]
 	count=0
+	valid_moves=g.ValidMoves()
+	blackOrWhite=valid_moves[0]["As"]
 	for move in valid_moves:
-		#for making newBoard from (every) move
-		board=newBoardStock[count]
-		boardPoint=calculate(board)
-		print(boardPoint)
-		boardAndPointDict[boardPoint]=move
-		listForPoint.append(boardPoint)
+		moveStock.append(move)
+		newBoard=newBoardStock[count]
+		boardStockStock[0].append(newBoard)
+		boardStockStock.append([])
 		count+=1
-	if valid_moves[0]["As"]==1:
-		return boardAndPointDict[max(listForPoint)]
-	elif valid_moves[0]["As"]==2:
-		return boardAndPointDict[min(listForPoint)]
+	moveCount=1
+	for newBoard in boardStockStock[0]:
+		g._board["Pieces"]=newBoard
+		valid_moves=g.ValidMoves()
+		for move in valid_moves:
+			newBoard=newBoardStock[count]
+			boardStockStock[moveCount].append(newBoard)
+			count+=1
+		moveCount+=1
+	for i in range(1,len(boardStockStock)):
+		pointList=score(boardStockStock[i])
+		if blackOrWhite==1:
+			moveAndPoint[min(pointList)]=moveStock[i-1]
+			pointStock.append(min(pointList))
+		elif blackOrWhite==2:
+			moveAndPoint[max(pointList)]=moveStock[i-1]
+			pointStock.append(max(pointList))
+
+	if blackOrWhite==1:
+		return moveAndPoint[max(pointStock)]
+	elif blackOrWhite==2:
+		return moveAndPoint[min(pointStock)]
+	
+
+	
 #-----------------------written by Mamiko Ino--------------------------
 
 
@@ -226,7 +261,7 @@ Paste JSON here:<p/><textarea name=json cols=80 rows=24></textarea>
                 # You'll probably want to change how this works, to do something
                 # more clever than just picking a random move.
 			
-	    	move = minMax(g,g._board,g.Next(),valid_moves)
+	    	move = minMax(g,g.Next())
     		self.response.write(PrettyMove(move))
 	
 	
