@@ -141,42 +141,45 @@ def calculate(board):
 	for indexForX in range(2,8):
 		for indexForY in range(2,8):
 			if indexForX==2 or 7 and indexForY==2 or 7 and board[indexForX-1][indexForY-1]==1:
-				pointOfBlack-=5
+				pointOfBlack-=4
 			elif indexForX==2 or 7 and indexForY==2 or 7 and board[indexForX-1][indexForY-1]==2:	
-				pointOfWhite+=5
-			elif board[indexForX-1][indexForY-1]==1:
-				pointOfBlack+=1
-			elif board[indexForX-1][indexForY-1]==2:
-				pointOfWhite-=1
+				pointOfWhite+=4
+			else:
+				if board[indexForX-1][indexForY-1]==1:
+					pointOfBlack+=1
+				elif board[indexForX-1][indexForY-1]==2:
+					pointOfWhite-=1
 
 	for indexForX in [1,8]:
 		for indexForY in range(2,8):
-			if indexForY in [2,7] and board[indexForX-1][indexForY-1]==1:
-				pointOfBlack-=5
-			elif indexForY in [2,7] and board[indexForX-1][indexForY-1]==2:
-				pointOfWhite+=5
-			elif board[indexForX-1][indexForY-1]==1:
-				pointOfBlack+=4
-			elif board[indexForX-1][indexForY-1]==2:
-				pointOfWhite-=4
+			if indexForY==2 or 7 and board[indexForX-1][indexForY-1]==1:
+				pointOfBlack-=4
+			elif indexForY==2 or 7 and board[indexForX-1][indexForY-1]==2:
+				pointOfWhite+=4
+			else:
+				if board[indexForX-1][indexForY-1]==1:
+					pointOfBlack+=3
+				elif board[indexForX-1][indexForY-1]==2:
+					pointOfWhite-=3
 		
 	for indexForY in [1,8]:
 		for indexForX in range(2,8):
-			if indexForX in [2,7] and board[indexForX-1][indexForY-1]==1:
-				pointOfBlack-=5
-			elif indexForX in [2,7] and board[indexForX-1][indexForY-1]==2:
-				pointOfWhite+=5
-			elif board[indexForX-1][indexForY-1]==1:
-				pointOfBlack+=4
-			elif board[indexForX-1][indexForY-1]==2:
-				pointOfWhite-=4
+			if indexForX==2 or 7 and board[indexForX-1][indexForY-1]==1:
+				pointOfBlack-=4
+			elif indexForX==2 or 7 and board[indexForX-1][indexForY-1]==2:
+				pointOfWhite+=4
+			else:
+				if board[indexForX-1][indexForY-1]==1:
+					pointOfBlack+=3
+				elif board[indexForX-1][indexForY-1]==2:
+					pointOfWhite-=3
 		
 	for indexForX in [1,8]:
 		for indexForY in [1,8]:
 			if board[indexForX-1][indexForY-1]==1:
-				pointOfBlack+=10
+				pointOfBlack+=11
 			elif board[indexForX-1][indexForY-1]==2:
-				pointOfWhite-=10
+				pointOfWhite-=11
 
 	boardPoint=pointOfBlack+pointOfWhite
 	return boardPoint
