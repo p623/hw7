@@ -137,12 +137,13 @@ def PrettyMove(move):
 def calculate(board):
 	pointOfBlack=0
 	pointOfWhite=0
+	
 	for indexForX in range(2,8):
 		for indexForY in range(2,8):
 			if indexForX==2 or 7 and indexForY==2 or 7 and board[indexForX-1][indexForY-1]==1:
-				pointOfBlack-=4
+				pointOfBlack-=5
 			elif indexForX==2 or 7 and indexForY==2 or 7 and board[indexForX-1][indexForY-1]==2:	
-				pointOfWhite+=4
+				pointOfWhite+=5
 			elif board[indexForX-1][indexForY-1]==1:
 				pointOfBlack+=1
 			elif board[indexForX-1][indexForY-1]==2:
@@ -150,24 +151,32 @@ def calculate(board):
 
 	for indexForX in [1,8]:
 		for indexForY in range(2,8):
-			if board[indexForX-1][indexForY-1]==1:
-					pointOfBlack+=3
+			if indexForY in [2,7] and board[indexForX-1][indexForY-1]==1:
+				pointOfBlack-=5
+			elif indexForY in [2,7] and board[indexForX-1][indexForY-1]==2:
+				pointOfWhite+=5
+			elif board[indexForX-1][indexForY-1]==1:
+				pointOfBlack+=4
 			elif board[indexForX-1][indexForY-1]==2:
-					pointOfWhite-=3
+				pointOfWhite-=4
 		
 	for indexForY in [1,8]:
 		for indexForX in range(2,8):
-			if board[indexForX-1][indexForY-1]==1:
-					pointOfBlack+=3
+			if indexForX in [2,7] and board[indexForX-1][indexForY-1]==1:
+				pointOfBlack-=5
+			elif indexForX in [2,7] and board[indexForX-1][indexForY-1]==2:
+				pointOfWhite+=5
+			elif board[indexForX-1][indexForY-1]==1:
+				pointOfBlack+=4
 			elif board[indexForX-1][indexForY-1]==2:
-					pointOfWhite-=3
+				pointOfWhite-=4
 		
 	for indexForX in [1,8]:
 		for indexForY in [1,8]:
 			if board[indexForX-1][indexForY-1]==1:
-					pointOfBlack+=7
+				pointOfBlack+=10
 			elif board[indexForX-1][indexForY-1]==2:
-					pointOfWhite-=7
+				pointOfWhite-=10
 
 	boardPoint=pointOfBlack+pointOfWhite
 	return boardPoint
