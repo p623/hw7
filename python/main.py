@@ -1,6 +1,3 @@
-#!/usr/bin/env python
-# -*- coding: utf-8 -*-
-
 import copy
 import json
 import logging
@@ -184,52 +181,63 @@ def calculate(board):
 	boardPoint=pointOfBlack+pointOfWhite
 	return boardPoint
 
-def score(newBoards):
-	pointListForReturn=[]
-	for board in newBoards:
-		pointListForReturn.append(calculate(board))
-	return pointListForReturn
 
-
-def minMax(g,player):
-	depth=2
-	moveAndPoint={}
-	moveStock=[]
-	pointStock=[]
-	boardStockStock=[[]]
-	count=0
-	valid_moves=g.ValidMoves()
-	blackOrWhite=valid_moves[0]["As"]
-	for move in valid_moves:
-		moveStock.append(move)
-		newBoard=newBoardStock[count]
-		boardStockStock[0].append(newBoard)
-		boardStockStock.append([])
-		count+=1
-	moveCount=1
-	for newBoard in boardStockStock[0]:
-		g._board["Pieces"]=newBoard
+def score(g,board,depth, blackOrWhite):
+	indexForDepth=0
+	if indexForDepth==depth:
+		listForScore=[]
+		g._board["Pieces"]=board
 		valid_moves=g.ValidMoves()
 		for move in valid_moves:
-			newBoard=newBoardStock[count]
-			boardStockStock[moveCount].append(newBoard)
+			g.NextBoardPosition(move)#g,move
+			listForScore.append(calculate(g._board["Pieces"]))
+		if blackOrWhite==1 and depth%2==0 and blackOrWhite==2 and depth%2==1:
+			return min(listForScore)
+		else:
+			return max(listForScore)
+
+	else:
+		listPointStock=[]
+		g._board["Pieces"]=board
+		valid_moves=g.ValidMoves()
+		for move in valid_moves:
+			g.NextBoardPosition(move)#g,move
+			listPointStock.append(score(g,g._board["Pieces"],indexForDepth+1,blackOrWhite))
+		if blackOrWhite==1 and indexForDepth%2==0 and blackOrWhite==2 and indexForDepth%2==1:
+			return min(listPointStock)
+		else:
+			return max(listPointStock)
+	indexForDepth+=1
+			
+
+def minMax(g):
+	startTime=time.time()
+	valid_moves=g.ValidMoves()
+	depth=1
+	blackOrWhite=valid_moves[0]["As"]
+	while True:
+		moveStock={}
+		pointOfMove=[]
+		for move in valid_moves:
+			g.NextBoardPosition(move)#g,move
+			scoreOfThisMove=score(g,g._board["Pieces"],depth,3-blackOrWhite)	
+			pointOfMove.append(scoreOfThisMove)
+			moveStock[scoreOfThisMove]=move
 			count+=1
-		moveCount+=1
-	for i in range(1,len(boardStockStock)):
-		pointList=score(boardStockStock[i])
-		if blackOrWhite==1:
-			moveAndPoint[min(pointList)]=moveStock[i-1]
-			pointStock.append(min(pointList))
-		elif blackOrWhite==2:
-			moveAndPoint[max(pointList)]=moveStock[i-1]
-			pointStock.append(max(pointList))
+		print("depth: "+str(depth))
+		print(moveStock)
+		depth+=1
+		if time.time()-startTime>5:
+			break
 
-	if blackOrWhite==1:
-		return moveAndPoint[max(pointStock)]
-	elif blackOrWhite==2:
-		return moveAndPoint[min(pointStock)]
+	if player==1:
+		choicedPoint=max(pointOfMove)
+		return moveStock[choicedPoint]
+	else:
+		choicedPoint=min(pointOfMove)
+		return moveStock[choicedPoint]
+
 	
-
 	
 #-----------------------written by Mamiko Ino--------------------------
 
@@ -273,8 +281,7 @@ Paste JSON here:<p/><textarea name=json cols=80 rows=24></textarea>
                 # You'll probably want to change how this works, to do something
                 # more clever than just picking a random move.
 			
-	    	move = minMax(g,g.Next())
-    		self.response.write(PrettyMove(move))
+    		self.response.write(PrettyMove(minMax(g)))
 	
 	
 	#def keepTime(g,board,piece):
