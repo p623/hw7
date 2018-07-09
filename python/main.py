@@ -5,7 +5,6 @@ import random
 import webapp2
 import time
 
-
 # Reads json description of the board and provides simple interface.
 class Game:
 	# Takes json or a board directly.
