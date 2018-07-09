@@ -179,7 +179,7 @@ def calculate(board):
 	return boardPoint
 
 
-def score(g,board,depth, blackOrWhite):
+def score(g,board,depth, blackOrWhite):#,g._board,depth
 	indexForDepth=0
 	if indexForDepth==depth:
 		listForScore=[]
@@ -188,23 +188,23 @@ def score(g,board,depth, blackOrWhite):
 		for move in valid_moves:
 			g.NextBoardPosition(move)#g,move
 			listForScore.append(calculate(g._board["Pieces"]))
-		if blackOrWhite==1 and depth%2==0 and blackOrWhite==2 and depth%2==1:
+		if blackOrWhite==1 and depth%2==0 or blackOrWhite==2 and depth%2==1:
 			return min(listForScore)
 		else:
 			return max(listForScore)
 
 	else:
 		listPointStock=[]
-		g._board["Pieces"]=board
+		#g._board["Pieces"]=board
 		valid_moves=g.ValidMoves()
 		for move in valid_moves:
 			g.NextBoardPosition(move)#g,move
-			listPointStock.append(score(g,g._board["Pieces"],indexForDepth+1,blackOrWhite))
-		if blackOrWhite==1 and indexForDepth%2==0 and blackOrWhite==2 and indexForDepth%2==1:
+			listPointStock.append(score(g,g._board["Pieces"],indexForDepth+1,blackOrWhite)) #,g._board,depth
+		if blackOrWhite==1 and indexForDepth%2==0 or blackOrWhite==2 and indexForDepth%2==1:
 			return min(listPointStock)
 		else:
 			return max(listPointStock)
-	indexForDepth+=1
+		indexForDepth+=1
 			
 
 def minMax(g):
@@ -217,7 +217,7 @@ def minMax(g):
 		pointOfMove=[]
 		for move in valid_moves:
 			g.NextBoardPosition(move)#g,move
-			scoreOfThisMove=score(g,g._board["Pieces"],depth,3-blackOrWhite)	
+			scoreOfThisMove=score(g,g._board["Pieces"],depth,3-blackOrWhite)	#,g._board,depth
 			pointOfMove.append(scoreOfThisMove)
 			moveStock[scoreOfThisMove]=move
 			count+=1
