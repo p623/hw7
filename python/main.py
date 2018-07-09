@@ -5,7 +5,6 @@ import random
 import webapp2
 import time
 
-newBoardStock=[]
 
 # Reads json description of the board and provides simple interface.
 class Game:
@@ -66,7 +65,6 @@ class Game:
 				flip_x = flip_move[0]
 				flip_y = flip_move[1]
 				SetPos(new_board, flip_x, flip_y, player)
-				newBoardStock.append(new_board)
                         return True
                 return False
 
