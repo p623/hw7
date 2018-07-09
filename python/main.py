@@ -4,7 +4,7 @@ import logging
 import random
 import webapp2
 import time
-timeManager=8
+
 # Reads json description of the board and provides simple interface.
 class Game:
 	# Takes json or a board directly.
@@ -216,7 +216,7 @@ def score(g,board,depth, blackOrWhite,timeManager):
 def minMax(g):
 	startTime=time.time()
 	print(startTime)
-	timeManager=5
+	timeManager=6
 	valid_moves=g.ValidMoves()
 	depth=1
 	blackOrWhite=valid_moves[0]["As"]
@@ -298,7 +298,8 @@ Paste JSON here:<p/><textarea name=json cols=80 rows=24></textarea>
                 # You'll probably want to change how this works, to do something
                 # more clever than just picking a random move.
     		self.response.write(PrettyMove(minMax(g)))
-	
+
+# ver 2018071000217
 
 
 app = webapp2.WSGIApplication([
