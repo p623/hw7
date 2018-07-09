@@ -4,7 +4,7 @@ import logging
 import random
 import webapp2
 import time
-
+timeManager=8
 # Reads json description of the board and provides simple interface.
 class Game:
 	# Takes json or a board directly.
@@ -179,15 +179,18 @@ def calculate(board):
 	return boardPoint
 
 
-def score(g,board,depth, blackOrWhite):#,g._board,depth
-	indexForDepth=0
-	if indexForDepth==depth:
+def score(g,board,depth, blackOrWhite,timeManager):
+	startTime=time.time()
+	if depth==0:
 		listForScore=[]
 		g._board["Pieces"]=board
 		valid_moves=g.ValidMoves()
 		for move in valid_moves:
 			g.NextBoardPosition(move)#g,move
 			listForScore.append(calculate(g._board["Pieces"]))
+			usedTime=time.time()-startTime
+			timeManager-=usedTime
+
 		if blackOrWhite==1 and depth%2==0 or blackOrWhite==2 and depth%2==1:
 			return min(listForScore)
 		else:
@@ -195,39 +198,56 @@ def score(g,board,depth, blackOrWhite):#,g._board,depth
 
 	else:
 		listPointStock=[]
-		#g._board["Pieces"]=board
+		g._board["Pieces"]=board
 		valid_moves=g.ValidMoves()
 		for move in valid_moves:
+			usedTime=time.time()-startTime
+			if timeManager-usedTime<=0:
+				break
 			g.NextBoardPosition(move)#g,move
-			listPointStock.append(score(g,g._board["Pieces"],indexForDepth+1,blackOrWhite)) #,g._board,depth
-		if blackOrWhite==1 and indexForDepth%2==0 or blackOrWhite==2 and indexForDepth%2==1:
-			return min(listPointStock)
-		else:
+			listPointStock.append(score(g,g._board["Pieces"],depth-1,blackOrWhite,timeManager-usedTime)) 
+		if blackOrWhite==1 and depth-1%2==0 or blackOrWhite==2 and depth-1%2==1:
 			return max(listPointStock)
-		indexForDepth+=1
+		else:
+			return min(listPointStock)
+		
 			
 
 def minMax(g):
 	startTime=time.time()
+	print(startTime)
+	timeManager=5
 	valid_moves=g.ValidMoves()
 	depth=1
 	blackOrWhite=valid_moves[0]["As"]
+	moveStockStock={}
+	pointMoveStock=[]
 	while True:
+		
 		moveStock={}
 		pointOfMove=[]
 		for move in valid_moves:
 			g.NextBoardPosition(move)#g,move
-			scoreOfThisMove=score(g,g._board["Pieces"],depth,3-blackOrWhite)	#,g._board,depth
+			scoreOfThisMove=score(g,g._board["Pieces"],depth,3-blackOrWhite,timeManager)
+			if time.time()-startTime>timeManager:
+				print(time.time())
+				break
 			pointOfMove.append(scoreOfThisMove)
 			moveStock[scoreOfThisMove]=move
-			count+=1
+		if time.time()-startTime>timeManager:
+			print(time.time())
+			break
 		print("depth: "+str(depth))
 		print(moveStock)
 		depth+=1
-		if time.time()-startTime>5:
-			break
+		moveStockStock=moveStock#stock for break
+		pointMoveStock=pointOfMove#stock for break
+		
+	if pointOfMove==[]:
+		pointOfMove=pointMoveStock
+		moveStock=moveStockStock	
 
-	if player==1:
+	if blackOrWhite==1:
 		choicedPoint=max(pointOfMove)
 		return moveStock[choicedPoint]
 	else:
@@ -277,15 +297,9 @@ Paste JSON here:<p/><textarea name=json cols=80 rows=24></textarea>
                 # TO STEP STUDENTS:
                 # You'll probably want to change how this works, to do something
                 # more clever than just picking a random move.
-			
     		self.response.write(PrettyMove(minMax(g)))
 	
 	
-	#def keepTime(g,board,piece):
-		#start=time.time()
-		#while True:
-			#if time.time()-start>=15:
-				#break
 
 
 
