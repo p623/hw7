@@ -147,9 +147,9 @@ def calculate(board):
 	for indexForX in [1,8]:
 		for indexForY in range(2,8):
 			if indexForY==2 or 7 and board[indexForX-1][indexForY-1]==1:
-				pointOfBlack-=4
+				pointOfBlack-=1
 			elif indexForY==2 or 7 and board[indexForX-1][indexForY-1]==2:
-				pointOfWhite+=4
+				pointOfWhite+=1
 			else:
 				if board[indexForX-1][indexForY-1]==1:
 					pointOfBlack+=3
@@ -159,9 +159,9 @@ def calculate(board):
 	for indexForY in [1,8]:
 		for indexForX in range(2,8):
 			if indexForX==2 or 7 and board[indexForX-1][indexForY-1]==1:
-				pointOfBlack-=4
+				pointOfBlack-=1
 			elif indexForX==2 or 7 and board[indexForX-1][indexForY-1]==2:
-				pointOfWhite+=4
+				pointOfWhite+=1
 			else:
 				if board[indexForX-1][indexForY-1]==1:
 					pointOfBlack+=3
@@ -171,9 +171,9 @@ def calculate(board):
 	for indexForX in [1,8]:
 		for indexForY in [1,8]:
 			if board[indexForX-1][indexForY-1]==1:
-				pointOfBlack+=11
+				pointOfBlack+=7
 			elif board[indexForX-1][indexForY-1]==2:
-				pointOfWhite-=11
+				pointOfWhite-=7
 
 	boardPoint=pointOfBlack+pointOfWhite
 	return boardPoint
@@ -242,7 +242,7 @@ def minMax(g):
 		depth+=1
 		moveStockStock=moveStock#stock for break
 		pointMoveStock=pointOfMove#stock for break
-		
+
 	if pointOfMove==[]:
 		pointOfMove=pointMoveStock
 		moveStock=moveStockStock	
