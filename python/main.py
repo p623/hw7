@@ -135,9 +135,9 @@ def calculate(board):
 	for indexForX in range(2,8):
 		for indexForY in range(2,8):
 			if indexForX==2 or 7 and indexForY==2 or 7 and board[indexForX-1][indexForY-1]==1:
-				pointOfBlack-=10
+				pointOfBlack-=6
 			elif indexForX==2 or 7 and indexForY==2 or 7 and board[indexForX-1][indexForY-1]==2:	
-				pointOfWhite+=10
+				pointOfWhite+=6
 			else:
 				if board[indexForX-1][indexForY-1]==1:
 					pointOfBlack+=1
@@ -147,33 +147,32 @@ def calculate(board):
 	for indexForX in [1,8]:
 		for indexForY in range(2,8):
 			if indexForY==2 or 7 and board[indexForX-1][indexForY-1]==1:
-				pointOfBlack-=3
+				pointOfBlack-=2
 			elif indexForY==2 or 7 and board[indexForX-1][indexForY-1]==2:
-				pointOfWhite+=3
+				pointOfWhite+=2
 			else:
 				if board[indexForX-1][indexForY-1]==1:
-					pointOfBlack+=6
+					pointOfBlack+=4
 				elif board[indexForX-1][indexForY-1]==2:
-					pointOfWhite-=6
-		
+					pointOfWhite-=4
 	for indexForY in [1,8]:
 		for indexForX in range(2,8):
 			if indexForX==2 or 7 and board[indexForX-1][indexForY-1]==1:
-				pointOfBlack-=3
+				pointOfBlack-=2
 			elif indexForX==2 or 7 and board[indexForX-1][indexForY-1]==2:
-				pointOfWhite+=3
+				pointOfWhite+=2
 			else:
 				if board[indexForX-1][indexForY-1]==1:
-					pointOfBlack+=6
+					pointOfBlack+=4
 				elif board[indexForX-1][indexForY-1]==2:
-					pointOfWhite-=6
+					pointOfWhite-=4
 		
 	for indexForX in [1,8]:
 		for indexForY in [1,8]:
 			if board[indexForX-1][indexForY-1]==1:
-				pointOfBlack+=20
+				pointOfBlack+=13
 			elif board[indexForX-1][indexForY-1]==2:
-				pointOfWhite-=20
+				pointOfWhite-=13
 
 	boardPoint=pointOfBlack+pointOfWhite
 	return boardPoint
@@ -332,7 +331,7 @@ Paste JSON here:<p/><textarea name=json cols=80 rows=24></textarea>
                 # more clever than just picking a random move.
     		self.response.write(PrettyMove(minMax(g)))
 
-# ver 201807102220ver2
+# ver 201807102245
 
 
 app = webapp2.WSGIApplication([
