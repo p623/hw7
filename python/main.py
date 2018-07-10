@@ -135,9 +135,9 @@ def calculate(board):
 	for indexForX in range(2,8):
 		for indexForY in range(2,8):
 			if indexForX==2 or 7 and indexForY==2 or 7 and board[indexForX-1][indexForY-1]==1:
-				pointOfBlack-=4
+				pointOfBlack-=6
 			elif indexForX==2 or 7 and indexForY==2 or 7 and board[indexForX-1][indexForY-1]==2:	
-				pointOfWhite+=4
+				pointOfWhite+=6
 			else:
 				if board[indexForX-1][indexForY-1]==1:
 					pointOfBlack+=1
@@ -171,9 +171,9 @@ def calculate(board):
 	for indexForX in [1,8]:
 		for indexForY in [1,8]:
 			if board[indexForX-1][indexForY-1]==1:
-				pointOfBlack+=10
+				pointOfBlack+=15
 			elif board[indexForX-1][indexForY-1]==2:
-				pointOfWhite-=10
+				pointOfWhite-=15
 
 	boardPoint=pointOfBlack+pointOfWhite
 	return boardPoint
@@ -207,7 +207,7 @@ def score(g,board,depth, blackOrWhite,timeManager):
 		valid_moves=g.ValidMoves()
 		for move in valid_moves:
 			g.NextBoardPosition(move)#g,move
-			if moveCount(g._board["Pieces"])<60:#perform as greedy if about 4 pieces left to move
+			if moveCount(g._board["Pieces"])<60:#perform as greedy if about 5 pieces left to move
 				listForScore.append(calculate(g._board["Pieces"]))
 			else:
 				listForScore.append(calculateAsGreedy(g._board["Pieces"]))
@@ -320,7 +320,7 @@ Paste JSON here:<p/><textarea name=json cols=80 rows=24></textarea>
                 # more clever than just picking a random move.
     		self.response.write(PrettyMove(minMax(g)))
 
-# ver 201807101827
+# ver 201807101850
 
 
 app = webapp2.WSGIApplication([
