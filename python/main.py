@@ -100,6 +100,7 @@ class Game:
 #
 # Pos and SetPos takes care of converting coordinate from 1-indexed to
 # 0-indexed that is actually used in the underlying arrays.
+
 def Pos(board, x, y):
 	if 1 <= x and x <= 8 and 1 <= y and y <= 8:
 		return board[y-1][x-1]
@@ -131,7 +132,6 @@ def PrettyMove(move):
 def calculate(board):
 	pointOfBlack=0
 	pointOfWhite=0
-	
 	for indexForX in range(2,8):
 		for indexForY in range(2,8):
 			if indexForX==2 or 7 and indexForY==2 or 7 and board[indexForX-1][indexForY-1]==1:
@@ -171,13 +171,33 @@ def calculate(board):
 	for indexForX in [1,8]:
 		for indexForY in [1,8]:
 			if board[indexForX-1][indexForY-1]==1:
-				pointOfBlack+=9
+				pointOfBlack+=10
 			elif board[indexForX-1][indexForY-1]==2:
-				pointOfWhite-=9
+				pointOfWhite-=10
 
 	boardPoint=pointOfBlack+pointOfWhite
 	return boardPoint
 
+def calculateAsGreedy(board):
+	pointOfBlack=0
+	pointOfWhite=0
+	for indexForX in range(1,9):
+		for indexForY in range(1,9):
+			if board[indexForX-1][indexForY-1]==1:
+				pointOfBlack+=1
+			elif board[indexForX-1][indexForY-1]==2:
+				pointOfWhite-=1
+	boardPoint=pointOfBlack+pointOfWhite
+	return boardPoint
+
+
+def moveCount(board):#for checking the number of play by the end of the game
+	moveCount=0
+	for indexForX in range(1,9):
+		for indexForY in range(1,9):
+			if board[indexForX-1][indexForY-1]==1 or board[indexForX-1][indexForY-1]==2:
+				moveCount+=1
+	return moveCount
 
 def score(g,board,depth, blackOrWhite,timeManager):
 	startTime=time.time()
@@ -187,7 +207,11 @@ def score(g,board,depth, blackOrWhite,timeManager):
 		valid_moves=g.ValidMoves()
 		for move in valid_moves:
 			g.NextBoardPosition(move)#g,move
-			listForScore.append(calculate(g._board["Pieces"]))
+			if moveCount(g._board["Pieces"])<60:#perform as greedy if about 4 pieces left to move
+				listForScore.append(calculate(g._board["Pieces"]))
+			else:
+				listForScore.append(calculateAsGreedy(g._board["Pieces"]))
+
 			usedTime=time.time()-startTime
 			timeManager-=usedTime
 
@@ -210,9 +234,7 @@ def score(g,board,depth, blackOrWhite,timeManager):
 			return max(listPointStock)
 		else:
 			return min(listPointStock)
-		
-			
-
+				
 def minMax(g):
 	startTime=time.time()
 	print(startTime)
@@ -223,7 +245,6 @@ def minMax(g):
 	moveStockStock={}
 	pointMoveStock=[]
 	while True:
-		
 		moveStock={}
 		pointOfMove=[]
 		for move in valid_moves:
@@ -299,7 +320,7 @@ Paste JSON here:<p/><textarea name=json cols=80 rows=24></textarea>
                 # more clever than just picking a random move.
     		self.response.write(PrettyMove(minMax(g)))
 
-# ver 2018071000217
+# ver 201807101827
 
 
 app = webapp2.WSGIApplication([
