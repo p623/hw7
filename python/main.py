@@ -135,9 +135,9 @@ def calculate(board):
 	for indexForX in range(2,8):
 		for indexForY in range(2,8):
 			if indexForX==2 or 7 and indexForY==2 or 7 and board[indexForX-1][indexForY-1]==1:
-				pointOfBlack-=6
+				pointOfBlack-=10
 			elif indexForX==2 or 7 and indexForY==2 or 7 and board[indexForX-1][indexForY-1]==2:	
-				pointOfWhite+=6
+				pointOfWhite+=10
 			else:
 				if board[indexForX-1][indexForY-1]==1:
 					pointOfBlack+=1
@@ -147,32 +147,32 @@ def calculate(board):
 	for indexForX in [1,8]:
 		for indexForY in range(2,8):
 			if indexForY==2 or 7 and board[indexForX-1][indexForY-1]==1:
-				pointOfBlack-=2
+				pointOfBlack-=3
 			elif indexForY==2 or 7 and board[indexForX-1][indexForY-1]==2:
-				pointOfWhite+=2
+				pointOfWhite+=3
 			else:
 				if board[indexForX-1][indexForY-1]==1:
-					pointOfBlack+=4
+					pointOfBlack+=6
 				elif board[indexForX-1][indexForY-1]==2:
-					pointOfWhite-=4
+					pointOfWhite-=6
 	for indexForY in [1,8]:
 		for indexForX in range(2,8):
 			if indexForX==2 or 7 and board[indexForX-1][indexForY-1]==1:
-				pointOfBlack-=2
+				pointOfBlack-=3
 			elif indexForX==2 or 7 and board[indexForX-1][indexForY-1]==2:
-				pointOfWhite+=2
+				pointOfWhite+=3
 			else:
 				if board[indexForX-1][indexForY-1]==1:
-					pointOfBlack+=4
+					pointOfBlack+=6
 				elif board[indexForX-1][indexForY-1]==2:
-					pointOfWhite-=4
+					pointOfWhite-=6
 		
 	for indexForX in [1,8]:
 		for indexForY in [1,8]:
 			if board[indexForX-1][indexForY-1]==1:
-				pointOfBlack+=13
+				pointOfBlack+=20
 			elif board[indexForX-1][indexForY-1]==2:
-				pointOfWhite-=13
+				pointOfWhite-=20
 
 	boardPoint=pointOfBlack+pointOfWhite
 	return boardPoint
@@ -216,7 +216,7 @@ def score(g,board,depth, blackOrWhite,timeManager):
 		valid_moves=g.ValidMoves()
 		for move in valid_moves:
 			g.NextBoardPosition(move)#g,move
-			if moveCount(g._board["Pieces"])<60 and moveCount(g._board["Pieces"])>=14: #perform as greedy if about 5 pieces left to move
+			if moveCount(g._board["Pieces"])<58 and moveCount(g._board["Pieces"])>=14: #perform as greedy if about 6 pieces left to move
 				listForScore.append(calculate(g._board["Pieces"]))
 			elif moveCount(g._board["Pieces"])<14:
 				listForScore.append(calculateNextMove(g,g._board["Pieces"],blackOrWhite))#to be inside at the starting game
@@ -331,7 +331,7 @@ Paste JSON here:<p/><textarea name=json cols=80 rows=24></textarea>
                 # more clever than just picking a random move.
     		self.response.write(PrettyMove(minMax(g)))
 
-# ver 201807102245
+# ver 201807102305
 
 
 app = webapp2.WSGIApplication([
