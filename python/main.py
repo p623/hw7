@@ -210,7 +210,7 @@ def moveCount(board):#for checking the number of play by the end of the game
 
 def score(g,board,depth, blackOrWhite,timeManager):
 	startTime=time.time()
-	firstdepth=depth
+	firstDepth=depth
 	if depth==0:
 		listForScore=[]
 		g._board["Pieces"]=board
@@ -227,7 +227,7 @@ def score(g,board,depth, blackOrWhite,timeManager):
 			usedTime=time.time()-startTime
 			timeManager-=usedTime
 
-		if blackOrWhite==1 and firstdepth%2==0 or blackOrWhite==2 and firstdepth%2==1:
+		if blackOrWhite==1 and firstDepth%2==0 or blackOrWhite==2 and firstDepth%2==1:
 			return max(listForScore)
 		else:
 			return min(listForScore)
@@ -242,7 +242,7 @@ def score(g,board,depth, blackOrWhite,timeManager):
 				break
 			g.NextBoardPosition(move)#g,move
 			listPointStock.append(score(g,g._board["Pieces"],depth-1,blackOrWhite,timeManager-usedTime)) 
-		if blackOrWhite==1 and depth-1%2==0 or blackOrWhite==2 and depth-1%2==1:
+		if blackOrWhite==1 and (firstDepth-depth)%2==0 or blackOrWhite==2 and (firstDepth-depth)%2==1:
 			return min(listPointStock)
 		else:
 			return max(listPointStock)
@@ -332,7 +332,7 @@ Paste JSON here:<p/><textarea name=json cols=80 rows=24></textarea>
                 # more clever than just picking a random move.
     		self.response.write(PrettyMove(minMax(g)))
 
-# ver 201807102130
+# ver 201807102140
 
 
 app = webapp2.WSGIApplication([
