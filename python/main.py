@@ -216,7 +216,7 @@ def score(g,board,depth, blackOrWhite,timeManager):
 		valid_moves=g.ValidMoves()
 		for move in valid_moves:
 			g.NextBoardPosition(move)#g,move
-			if moveCount(g._board["Pieces"])<56:# and moveCount(g._board["Pieces"])>=14: #perform as greedy if about 8 pieces left to move
+			if moveCount(g._board["Pieces"])<58:# and moveCount(g._board["Pieces"])>=14: #perform as greedy if about 5 pieces left to move
 				listForScore.append(calculate(g._board["Pieces"]))
 			#elif moveCount(g._board["Pieces"])<14:
 				#listForScore.append(calculateNextMove(g,g._board["Pieces"],blackOrWhite))#to be inside at the starting game
@@ -331,7 +331,7 @@ Paste JSON here:<p/><textarea name=json cols=80 rows=24></textarea>
                 # more clever than just picking a random move.
     		self.response.write(PrettyMove(minMax(g)))
 
-# ver 201807110346
+# ver 201807111041
 
 
 app = webapp2.WSGIApplication([
