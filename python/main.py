@@ -135,44 +135,65 @@ def calculate(board):
 	for indexForX in range(2,8):
 		for indexForY in range(2,8):
 			if indexForX==2 or 7 and indexForY==2 or 7 and board[indexForX-1][indexForY-1]==1:
-				pointOfBlack-=10
+				pointOfBlack-=15
 			elif indexForX==2 or 7 and indexForY==2 or 7 and board[indexForX-1][indexForY-1]==2:	
-				pointOfWhite+=10
+				pointOfWhite+=15
+			elif indexForX in [2,7] and indexForY in range(3,7) and board[indexForX-1][indexForY-1]==1:
+				pointOfBlack-=3
+			elif indexForX in [2,7] and indexForY in range(3,7) and board[indexForX-1][indexForY-1]==2:
+				pointOfBlack+=3
+			elif indexForY in [2,7] and indexForX in range(3,7) and board[indexForX-1][indexForY-1]==1:
+				pointOfBlack-=3
+			elif indexForY in [2,7] and indexForX in range(3,7) and board[indexForX-1][indexForY-1]==2:
+				pointOfBlack+=3
+			elif indexForX in [3,6] and indexForY in [3,6] and board[indexForX-1][indexForY-1]==1:
+				pointOfBlack+=0
+			elif indexForX in [3,6] and indexForY in [3,6] and board[indexForX-1][indexForY-1]==2:
+				pointOfWhite+=0
 			else:
 				if board[indexForX-1][indexForY-1]==1:
-					pointOfBlack+=1
+					pointOfBlack-=1
 				elif board[indexForX-1][indexForY-1]==2:
-					pointOfWhite-=1
+					pointOfWhite+=1
 
 	for indexForX in [1,8]:
 		for indexForY in range(2,8):
 			if indexForY==2 or 7 and board[indexForX-1][indexForY-1]==1:
-				pointOfBlack-=3
+				pointOfBlack-=12
 			elif indexForY==2 or 7 and board[indexForX-1][indexForY-1]==2:
-				pointOfWhite+=3
+				pointOfWhite+=12
+			elif indexForY==3 or 6 and board[indexForX-1][indexForY-1]==1:
+				pointOfBlack+=0
+			elif indexForY==3 or 6 and board[indexForX-1][indexForY-1]==2:
+				pointOfWhite+=0
 			else:
 				if board[indexForX-1][indexForY-1]==1:
-					pointOfBlack+=6
+					pointOfBlack-=1
 				elif board[indexForX-1][indexForY-1]==2:
-					pointOfWhite-=6
+					pointOfWhite+=1
+
 	for indexForY in [1,8]:
 		for indexForX in range(2,8):
 			if indexForX==2 or 7 and board[indexForX-1][indexForY-1]==1:
-				pointOfBlack-=3
+				pointOfBlack-=12
 			elif indexForX==2 or 7 and board[indexForX-1][indexForY-1]==2:
-				pointOfWhite+=3
+				pointOfWhite+=12
+			elif indexForX==3 or 6 and board[indexForX-1][indexForY-1]==1:
+				pointOfBlack+=0
+			elif indexForX==3 or 6 and board[indexForX-1][indexForY-1]==2:
+				pointOfWhite+=0
 			else:
 				if board[indexForX-1][indexForY-1]==1:
-					pointOfBlack+=6
+					pointOfBlack-=1
 				elif board[indexForX-1][indexForY-1]==2:
-					pointOfWhite-=6
+					pointOfWhite+=1
 		
 	for indexForX in [1,8]:
 		for indexForY in [1,8]:
 			if board[indexForX-1][indexForY-1]==1:
-				pointOfBlack+=20
+				pointOfBlack+=30
 			elif board[indexForX-1][indexForY-1]==2:
-				pointOfWhite-=20
+				pointOfWhite-=30
 
 	boardPoint=pointOfBlack+pointOfWhite
 	return boardPoint
@@ -215,13 +236,12 @@ def score(g,board,depth, blackOrWhite,timeManager):
 		g._board["Pieces"]=board
 		valid_moves=g.ValidMoves()
 		for move in valid_moves:
-			g.NextBoardPosition(move)#g,move
-			if moveCount(g._board["Pieces"])<58:# and moveCount(g._board["Pieces"])>=14: #perform as greedy if about 5 pieces left to move
-				listForScore.append(calculate(g._board["Pieces"]))
+			if moveCount(g.NextBoardPosition(move)._board["Pieces"])<58:# and moveCount(g._board["Pieces"])>=14: #perform as greedy if about 5 pieces left to move
+				listForScore.append(calculate(g.NextBoardPosition(move)._board["Pieces"]))
 			#elif moveCount(g._board["Pieces"])<14:
 				#listForScore.append(calculateNextMove(g,g._board["Pieces"],blackOrWhite))#to be inside at the starting game
 			else:
-				listForScore.append(calculateAsGreedy(g._board["Pieces"]))
+				listForScore.append(calculateAsGreedy(g.NextBoardPosition(move)._board["Pieces"]))
 
 			usedTime=time.time()-startTime
 			timeManager-=usedTime
@@ -239,8 +259,7 @@ def score(g,board,depth, blackOrWhite,timeManager):
 			usedTime=time.time()-startTime
 			if timeManager-usedTime<=0:
 				break
-			g.NextBoardPosition(move)#g,move
-			listPointStock.append(score(g,g._board["Pieces"],depth-1,blackOrWhite,timeManager-usedTime)) 
+			listPointStock.append(score(g,g.NextBoardPosition(move)._board["Pieces"],depth-1,blackOrWhite,timeManager-usedTime)) 
 		if blackOrWhite==1 and (firstDepth-depth)%2==0 or blackOrWhite==2 and (firstDepth-depth)%2==1:
 			return max(listPointStock)
 		else:
@@ -259,11 +278,11 @@ def minMax(g):
 		moveStock={}
 		pointOfMove=[]
 		for move in valid_moves:
-			g.NextBoardPosition(move)#g,move
-			scoreOfThisMove=score(g,g._board["Pieces"],depth,3-blackOrWhite,timeManager)
+			scoreOfThisMove=score(g,g.NextBoardPosition(move)._board["Pieces"],depth,3-blackOrWhite,timeManager)
 			if time.time()-startTime>timeManager:
 				print(time.time())
 				break
+			print(scoreOfThisMove)
 			pointOfMove.append(scoreOfThisMove)
 			moveStock[scoreOfThisMove]=move
 		if time.time()-startTime>timeManager:
@@ -331,7 +350,7 @@ Paste JSON here:<p/><textarea name=json cols=80 rows=24></textarea>
                 # more clever than just picking a random move.
     		self.response.write(PrettyMove(minMax(g)))
 
-# ver 201807111041
+# ver 201807111623
 
 
 app = webapp2.WSGIApplication([
