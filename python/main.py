@@ -235,7 +235,7 @@ def score(g,depth, blackOrWhite,timeManager):#g,board
 		listForScore=[]
 		valid_moves=g.ValidMoves()
 		for move in valid_moves:
-			if moveCount(g.NextBoardPosition(move)._board["Pieces"])<58:# and moveCount(g._board["Pieces"])>=14: #perform as greedy if about 5 pieces left to move
+			if moveCount(g.NextBoardPosition(move)._board["Pieces"])<50:# and moveCount(g._board["Pieces"])>=14: #perform as greedy if about 8 pieces left to move
 				listForScore.append(calculate(g.NextBoardPosition(move)._board["Pieces"]))
 			#elif moveCount(g.NextBoardPosition(move)._board["Pieces"])<14:
 				#listForScore.append(calculateNextMove(g.NextBoardPosition(move),blackOrWhite))#to be inside at the starting game
@@ -249,7 +249,7 @@ def score(g,depth, blackOrWhite,timeManager):#g,board
 			if listForScore!=[]:
 				return max(listForScore)
 			else:
-				return 0
+				return -300
 		else:
 			if listForScore!=[]:
 				return min(listForScore)
@@ -268,7 +268,7 @@ def score(g,depth, blackOrWhite,timeManager):#g,board
 			if listPointStock!=[]:
 				return max(listPointStock)
 			else:
-				return 0
+				return -300
 		else:
 			if listPointStock!=[]:
 				return min(listPointStock)
@@ -278,7 +278,7 @@ def score(g,depth, blackOrWhite,timeManager):#g,board
 def minMax(g):
 	startTime=time.time()
 	print(startTime)
-	timeManager=6
+	timeManager=7
 	valid_moves=g.ValidMoves()
 	depth=1
 	blackOrWhite=valid_moves[0]["As"]
@@ -293,6 +293,8 @@ def minMax(g):
 				print(time.time())
 				break
 			pointOfMove.append(scoreOfThisMove)
+			print(pointOfMove)
+			print(move)
 			moveStock[scoreOfThisMove]=move
 		if time.time()-startTime>timeManager:
 			print(time.time())
@@ -303,7 +305,7 @@ def minMax(g):
 		moveStockStock=moveStock#stock for break
 		pointMoveStock=pointOfMove#stock for break
 
-	if pointOfMove==[]:
+	if len(pointOfMove)<len(pointMoveStock):
 		pointOfMove=pointMoveStock
 		moveStock=moveStockStock	
 
@@ -359,7 +361,7 @@ Paste JSON here:<p/><textarea name=json cols=80 rows=24></textarea>
                 # more clever than just picking a random move.
     		self.response.write(PrettyMove(minMax(g)))
 
-# ver 201807112344
+# ver 201807121858
 
 
 app = webapp2.WSGIApplication([
