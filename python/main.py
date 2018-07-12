@@ -278,7 +278,7 @@ def score(g,depth, blackOrWhite,timeManager):#g,board
 def minMax(g):
 	startTime=time.time()
 	print(startTime)
-	timeManager=7
+	timeManager=8
 	valid_moves=g.ValidMoves()
 	depth=1
 	blackOrWhite=valid_moves[0]["As"]
@@ -311,9 +311,15 @@ def minMax(g):
 
 	if blackOrWhite==1:
 		choicedPoint=max(pointOfMove)
+		print(choicedPoint)#
+		print(moveStock[choicedPoint])#
+		print(time.time())#
 		return moveStock[choicedPoint]
 	else:
 		choicedPoint=min(pointOfMove)
+		print(choicedPoint)
+		print(moveStock[choicedPoint])
+		print(time.time())
 		return moveStock[choicedPoint]
 
 	
@@ -361,7 +367,7 @@ Paste JSON here:<p/><textarea name=json cols=80 rows=24></textarea>
                 # more clever than just picking a random move.
     		self.response.write(PrettyMove(minMax(g)))
 
-# ver 201807121858
+# ver 201807121930
 
 
 app = webapp2.WSGIApplication([
